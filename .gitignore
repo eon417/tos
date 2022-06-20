@@ -1,0 +1,7 @@
+# Project exclude paths
+/tos-web-api/target/
+/tos-web-core/target/
+/tos-web-ngx/dist/
+/tos-web-ngx/node_modules/
+/tos-web-ngx/target/
+/tos-web-rest/target/

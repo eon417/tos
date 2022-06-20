@@ -1,0 +1,41 @@
+<div class="contentWrapper">
+    <div>
+        <p class="titleFont">All User Profiles</p>
+    </div>
+    <div *ngIf="userExists">
+        <table class="datatable">
+            <th *ngFor = "let column of headers">
+                <p>{{column}}</p>
+            </th>
+            <th>
+                <input id="searchContent" type="text">
+                <button type="button" class="table-button" (click)="searchUser();">Search</button>
+                <button type="button" class="table-button" (click)="findUser();searchUserExists=false;clearInputBox()" *ngIf="searchUserExists">Back</button>
+            </th>
+            <tr *ngFor = "let row of data">
+                <td *ngFor = "let column of displayedColumns">
+                    {{row[column]}}
+                </td>
+                <td>
+                    <button class="table-button" (click)="viewDetails(row['userID'])">View</button>
+                    <button *ngIf="row['userEnabled']" class="table-button" [disabled]="userAmount<=1" (click)="popupRemove=true;userToUpdate=row;">Disable</button>
+                    <button *ngIf="!row['userEnabled']" class="table-button" [disabled]="userAmount<=1" (click)="popupRemove=true;userToUpdate=row;">Enable</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div *ngIf="popupRemove" id="removeModal" class="modal" (click)="triggerModal($event)">
+        <div class="modal-content">
+            <span class="close" (click)="popupRemove=false">&times;</span>
+            <p *ngIf="!userToUpdate['userEnabled']" class="titleFont">Enable User</p>
+            <p *ngIf="!userToUpdate['userEnabled']" class="contentFont">Are you sure you want to enable this user?</p>
+
+            <p *ngIf="userToUpdate['userEnabled']" class="titleFont">Disable User</p>
+            <p *ngIf="userToUpdate['userEnabled']" class="contentFont">Are you sure you want to disable this user?</p>
+
+            <button class="table-button" (click)="removeUser()"><span *ngIf="!userToUpdate['userEnabled']">Enable</span><span *ngIf="userToUpdate['userEnabled']">Disable</span></button>
+            <button class="table-button" (click)="popupRemove=false">Cancel</button>
+        </div>
+    </div>
+</div>

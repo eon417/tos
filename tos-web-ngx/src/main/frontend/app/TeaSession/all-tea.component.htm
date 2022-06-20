@@ -1,0 +1,253 @@
+<div class="contentWrapper">
+    <div>
+        <p class="titleFont">Available Tea Sessions</p>
+    </div>
+    <div *ngIf="teaExists">
+        <table class="datatable">
+            <th *ngFor = "let column of headers">
+                <p>{{column}}</p>
+            </th>
+            <th>
+                <input id="searchContent" type="text">
+                <button type="button" class="table-button" (click)="searchByTeaName();">Search</button>
+                <button type="button" class="table-button" (click)="findTea();searchTeaExists=false;" *ngIf="searchTeaExists">Back</button>
+            </th>
+            <tr *ngFor = "let row of data">
+                <td *ngFor = "let column of displayedColumns">
+                    {{row[column]}}
+                </td>
+                <td>{{row['teaCreator']['username']}}</td>
+                <td>
+                    <button class="table-button" (click)="viewDetails(row['teaID'])">View</button>
+                    <button class="table-button" *ngIf="this.isAdmin" (click)="popupRemove=true;teaID=row['teaID']">Remove</button>
+                    <button class="table-button" *ngIf="this.isAdmin" (click)="popupEdit=true;searchTea(row['teaID'])">Edit</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div *ngIf="!teaExists" class="text-center">
+        <p>No Tea Sessions Found. <a class="inline-button commentFont" (click)="popup=!popup">Create One?</a></p>
+    </div>
+
+
+    <div *ngIf="popup" id="addModal" class="modal" (click)="triggerModal($event)">
+        <div class="modal-content">
+            <span class="close" (click)="popup=false">&times;</span>
+            <form #formTest="ngForm" (ngSubmit)="onSubmit()">
+                <div class="form">
+                    <p class="titleFont">Create Tea Session</p>
+                    <table class="formTable">
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="formTeaName">Tea Session Name: </label>
+                            </td>
+                            <td>
+                                <input #formTeaName="ngModel" [(ngModel)]="form.data.teaName" id="formTeaName" name="formTeaName" type="text" placeholder="Tea Session Name" required>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="formTeaDesc">Tea Session Description: </label>
+                            </td>
+                            <td>
+                                <input #formTeaDesc="ngModel" [(ngModel)]="form.data.teaDesc" id="formTeaDesc" name="formTeaDesc" type="text" placeholder="Tea Session Description">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="formTeaPwd">Tea Session Password: </label>
+                            </td>
+                            <td>
+                                <input #formTeaPwd="ngModel" [(ngModel)]="form.data.teaPwd" id="formTeaPwd" name="formTeaPwd" type="password" placeholder="Tea Session Password" required>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="formTeaCutOffDate">Tea Session Cut Off Date: </label>
+                            </td>
+                            <td>
+                                <input #formTeaCutOffDate="ngModel" [(ngModel)]="form.data.teaCutOffDate" id="formTeaCutOffDate" name="formTeaCutOffDate" type="date" placeholder="Tea Session Treat Date" required>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="formTeaTreatDate">Tea Session Treat Date: </label>
+                            </td>
+                            <td>
+                                <input #formTeaTreatDate="ngModel" [(ngModel)]="form.data.teaTreatDate" id="formTeaTreatDate" name="formTeaTreatDate" type="date" placeholder="Tea Session Treat Date" required>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="formTeaVisible">Tea Session Visibility: </label>
+                            </td>
+                            <td>
+                                <input #formTeaVisible="ngModel" [(ngModel)]="form.data.teaVisible" id="formTeaVisible" name="formTeaVisible" type="checkbox" placeholder="Tea Session Visibility">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="file">Tea Session Menu: </label>
+                            </td>
+                            <td>
+                                <input accept="image/*" type="file" id="file" required (change)="handleFileInput($event.target.files)">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-center" colspan="2">
+                                <div *ngIf="!errorStatus" class="errorMsg"><span>{{errorMsg}}</span></div>
+                                <button [disabled]="!formTest.form.valid" name="formSubmit" type="submit" class="table-button">Create</button>
+                                <button class="table-button" (click)="resetForm()">Reset</button>
+                                <button class="table-button" (click)="popup=false;resetForm()">Cancel</button>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="text-center">
+        <button class="table-button" (click)="popup=!popup">Add New Tea Session</button>
+    </div>
+
+    <div *ngIf="popupEdit" id="editModal" class="modal" (click)="triggerModal($event)">
+        <div class="modal-content">
+            <span class="close" (click)="popupEdit=false">&times;</span>
+            <form #formTest="ngForm" (ngSubmit)="onEdit()">
+                <div class="form">
+                    <p class="titleFont">Edit Tea Session</p>
+                    <table class="formTable">
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="formTeaName">Tea Session Name: </label>
+                            </td>
+                            <td>
+                                <input id="editFormTeaName" name="formTeaName" type="text" placeholder="Tea Session Name">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="formTeaDesc">Tea Session Description: </label>
+                            </td>
+                            <td>
+                                <input id="editFormTeaDesc" name="formTeaDesc" type="text" placeholder="Tea Session Description">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="formTeaPwd">Tea Session Password: </label>
+                            </td>
+                            <td>
+                                <input id="editFormTeaPwd" name="formTeaPwd" type="password" placeholder="Tea Session Password">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="formTeaTreatDate">Tea Session Treat Date: </label>
+                            </td>
+                            <td>
+                                <input id="editFormTeaTreatDate" name="formTeaTreatDate" type="date" placeholder="Tea Session Treat Date">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="formTeaCutOffDate">Tea Session Cut Off Date: </label>
+                            </td>
+                            <td>
+                                <input id="editFormTeaCutOffDate" name="formTeaCutOffDate" type="date" placeholder="Tea Session Treat Date">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="formTeaVisible">Tea Session Visibility: </label>
+                            </td>
+                            <td>
+                                <input id="editFormTeaVisible" name="formTeaVisible" type="checkbox" placeholder="Tea Session Visibility" (change)="checkboxValidation()">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="file">Tea Session Menu: </label>
+                            </td>
+                            <td>
+                                <input accept="image/*" type="file" id="editFile" (change)="handleFileInput($event.target.files)">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="file">Tea Session Link: </label>
+                            </td>
+                            <td>
+                                <input id="editFormTeaLink" name="formTeaLink" type="text" placeholder="Tea Session Link">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-center" colspan="2">
+                                <div *ngIf="!errorStatus" class="errorMsg"><span>{{errorMsg}}</span></div>
+                                <button [disabled]="!formTest.form.valid" name="formSubmit" type="submit" class="table-button">Edit</button>
+                                <button type="button" class="table-button" (click)="searchTea(teaID)">Reset</button>
+                                <button type="button" class="table-button" (click)="popupEdit=false;">Cancel</button>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div *ngIf="popupRemove" id="removeModal" class="modal" (click)="triggerModal($event)">
+        <div class="modal-content">
+            <span class="close" (click)="popupRemove=false">&times;</span>
+            <p class="titleFont">Remove Tea Session</p>
+            <p class="contentFont">Are you sure you want to remove this tea session?</p>
+            <button class="table-button" (click)="removeTea(teaID)">Remove</button>
+            <button class="table-button" (click)="popupRemove=false">Cancel</button>
+        </div>
+    </div>
+
+    <div *ngIf="popupLink" id="linkModal" class="modal" (click)="triggerModal($event)">
+        <div class="modal-content">
+            <span class="close" (click)="popupLink=false">&times;</span>
+            <p>Private Link for your Tea Session</p>
+            <input readonly type="text" value="{{teaLink}}">
+            <div style="margin-top: 20px"></div>
+            <button class="table-button" (click)="copyLink(teaLink)">Copy</button>
+            <button class="table-button" (click)="popupLink=false">Close</button>
+        </div>
+    </div>
+</div>

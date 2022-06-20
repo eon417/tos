@@ -1,0 +1,330 @@
+/* GENERAL */
+html {
+    min-height: 100vh;
+    font-family: Times New Roman, serif;
+    background-image: linear-gradient( 109.6deg, rgba(156,252,248,1) 11.2%, rgba(110,123,251,1) 91.1% );
+}
+
+body {
+    margin: 0;
+}
+
+.contentWrapper {
+    padding: 20px;
+}
+
+.titleFont {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.contentFont {
+    font-size: 16px;
+    font-family: Palatino, serif;
+    text-align: center;
+    padding: 10px;
+}
+
+.commentFont {
+    font-size: 12px;
+    font-weight: lighter;
+}
+
+.table {
+    margin: 0 auto;
+    width: 50%;
+    background-color: rgba(0,0,0,0.25);
+}
+
+.table tr {
+    padding: 5px;
+}
+
+.table tr td {
+    width: 25%;
+    padding: 5px;
+}
+
+.table tr td input {
+    width: 70%;
+}
+
+button, a {
+    cursor: pointer;
+}
+
+button:hover, a:hover {
+    color: deepskyblue;
+    text-decoration: underline;
+}
+
+input {
+    padding: 10px 5px;
+}
+
+input:disabled {
+    cursor: not-allowed;
+}
+
+input[type="file"]:hover {
+    border: none;
+}
+
+input:hover {
+    border: 2px solid black;
+}
+
+input:focus-visible {
+    outline: none;
+}
+
+/* Button */
+.table-button {
+    padding: 10px 15px;
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid gray;
+    border-radius: 15px;
+    min-width: 100px;
+    margin: 10px;
+}
+
+.table-button:disabled {
+    background-color: gray;
+}
+
+.table-button:disabled:hover {
+    color: unset;
+    text-decoration: unset;
+    cursor: not-allowed;
+}
+
+.inline-button {
+    border: none;
+    color: blue;
+    background-color: unset;
+    width: unset;
+}
+
+.errorMsg {
+    color:red;
+    font-size: 12px;
+    font-weight: lighter;
+    font-family: Times New Roman, serif;
+}
+
+/* Table to show data */
+.datatable {
+    border-collapse: collapse;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    margin: 0 auto;
+    width: 80%;
+}
+
+.datatable th {
+    background-color: #77e2ff;
+    height: 40px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.datatable tr td{
+    min-width: 100px;
+    max-width: 200px;
+    height: 40px;
+    text-align: center;
+}
+
+.datatable tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.datatable tbody tr:nth-of-type(even) {
+    background-color: #f0f0f0;
+}
+
+.datatable tbody tr:nth-of-type(odd) {
+    background-color: #f6f6f6;
+}
+
+.datatable tbody tr:last-child {
+    border-bottom: 2px solid gray;
+}
+
+/* MODAL */
+.modal {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 40px;
+    border: 1px solid #888;
+    width: 60%;
+    text-align: center;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.formTable {
+    margin: 0 auto;
+    width: 90%;
+}
+
+.formTable tr td{
+    width: 40%;
+    padding: 10px;
+}
+
+.formTable tr td:nth-child(2) {
+    text-align: right;
+}
+
+.formTable tr td:first-child, .formTable tr td:last-child {
+    width: 10%;
+}
+
+/* NAV BAR*/
+.navbarBG {
+    background-image: linear-gradient( 109.6deg, rgba(156,252,248,1) 11.2%, rgba(110,123,251,1) 91.1% );
+    background-size: 200%;
+    animation: gradient 10s ease infinite;
+    padding: 10px;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+.navbar {
+    background-color: #151515;
+}
+
+.navbar a {
+    text-decoration: unset;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+.link-container {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 60px;
+    position: relative;
+    z-index: 0;
+    min-width: 10%;
+}
+
+.link-two {
+    color: lightblue;
+    transition: color 1s cubic-bezier(0.32, 0, 0.67, 0);
+}
+
+.link-two:hover {
+    color: #fff;
+    transition: color 1s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.link-two::before {
+    content: "";
+    position: absolute;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    clip-path: polygon(
+            0% -20%,
+            100% -30%,
+            100% -10%,
+            0% 0%,
+            0% 130%,
+            100% 120%,
+            100% 100%,
+            0% 110%
+    );
+    background-color: lightblue;
+
+    transition: clip-path 1s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.link-two:hover::before {
+    clip-path: polygon(
+            0% 10%,
+            100% 0%,
+            100% 20%,
+            0% 30%,
+            0% 100%,
+            100% 90%,
+            100% 70%,
+            0% 80%
+    );
+}
+
+.link-two::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    width: 5ch;
+    height: 5ch;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%) rotate(0deg) scale(0);
+    transition: transform 1s ease;
+
+    background-color: lightblue;
+}
+
+.link-two:hover::after {
+    transform: translate(50%, -50%) rotate(135deg) scale(1);
+}
+
+.text-align-right {
+    text-align: right !important;
+}
+
+.text-align-left {
+    text-align: left !important;
+}
+
+.text-center {
+    text-align: center !important;
+}

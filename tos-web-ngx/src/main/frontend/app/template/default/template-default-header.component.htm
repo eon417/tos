@@ -1,0 +1,17 @@
+<div class="navbarBG">
+    <div *ngIf="!logged" class="navbar link-container">
+        <a class="link-two" [routerLink]="['/user/login']">Login/Register</a>
+    </div>
+    <div *ngIf="logged" class="navbar link-container">
+        <a class="link-two" [routerLink]="['/user/login']" (click)="logout()">Logout</a>
+    </div>
+    <div *ngIf="logged" class="navbar link-container">
+        <a class="link-two" [routerLink]="['/tea']">Tea Session</a>
+    </div>
+    <div *ngIf="logged" class="navbar link-container">
+        <a class="link-two" (click)="navigateProfile()">User Profile</a>
+    </div>
+    <div *ngIf="logged && userData['userIsAdmin']" class="navbar link-container">
+        <a class="link-two" [routerLink]="['/user/profile']">All Users</a>
+    </div>
+</div>

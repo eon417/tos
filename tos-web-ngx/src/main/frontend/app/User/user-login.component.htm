@@ -1,0 +1,56 @@
+<div class="contentWrapper">
+    <form #formTest="ngForm" (ngSubmit)="onSubmit()">
+        <table class="contentFont table">
+            <tr>
+                <td></td>
+                <td colspan="2" class="titleFont">
+                    Convoy Financial Services Ltd Tea Ordering System
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <label>
+                        Username:
+                    </label>
+                </td>
+                <td class="text-align-left">
+                    <input #formUsername="ngModel" [(ngModel)]="form.data.username" maxlength="32" id="formUsername" name="formUsername" type="text" placeholder="Username" required>
+                    <div *ngIf="formUsername.errors && (formUsername.dirty || formUsername.touched)" class="errorMsg"><span hidden="!formUsername.errors.required">Required</span></div>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <label>
+                        Password:
+                    </label>
+                </td>
+                <td class="text-align-left">
+                    <input type="password" #formPwd="ngModel" [(ngModel)]="form.data.userPwd" maxlength="32" id="formPwd" name="formPwd" placeholder="Password" required>
+                    <div *ngIf="formPwd.errors && (formPwd.dirty || formPwd.touched)" class="errorMsg"><span hidden="!formPwd.errors.required">Required</span></div>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="2">
+                    <div *ngIf="!errorStatus" class="errorMsg"><span>{{errorMsg}}</span></div>
+
+                    <button [disabled]="!formTest.form.valid" name="formSubmit" type="submit" class="table-button">Login</button>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="2" class="commentFont">
+                    Don't have an account? <a class="inline-button commentFont" [routerLink]="['/user/register']">Register!</a>
+                </td>
+                <td></td>
+            </tr>
+
+        </table>
+    </form>
+</div>

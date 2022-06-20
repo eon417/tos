@@ -1,0 +1,103 @@
+<div class="contentWrapper">
+    <form #formTest="ngForm">
+        <table class="contentFont table">
+            <tr>
+                <td></td>
+                <td colspan="2" class="titleFont">
+                    PROFILE
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <label for="formUsername">
+                        Username:
+                    </label>
+                </td>
+                <td>
+                    {{data['username']}}
+                </td>
+                <td>
+                    <div *ngIf="editing">
+                        <input [disabled]="data['username']=='admin'" #formUsername="ngModel" [(ngModel)]="form.data.username" id="formUsername" name="formUsername" type="text" placeholder="Username">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <label for="formPwd">
+                        Password:
+                    </label>
+                </td>
+                <td>
+                    <input readonly style="border: none;text-align: center;background: transparent" type="password" value="{{data['userPwd']}}">
+                </td>
+                <td>
+                    <div *ngIf="editing">
+                        <input type="password" #formPwd="ngModel" [(ngModel)]="form.data.userPwd" id="formPwd" name="formPwd" placeholder="Password">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <label for="formPwd">
+                        Is Enabled:
+                    </label>
+                </td>
+                <td>
+                    {{data['userEnabled']}}
+                </td>
+                <td>
+                    <div *ngIf="editing && isAdmin">
+                        <input #formUserEnabled="ngModel" [disabled]="data['userID'] == userData['userID'] || data['username'] == 'admin'" [checked]="data['userEnabled']" [(ngModel)]="form.data.userEnabled" id="formUserEnabled" name="formUserEnabled" type="checkbox">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <label for="formPwd">
+                        Is Admin:
+                    </label>
+                </td>
+                <td>
+                    {{data['userIsAdmin']}}
+                </td>
+                <td>
+                    <div *ngIf="editing && isAdmin">
+                        <input #formUserIsAdmin="ngModel" [disabled]="data['userID'] == userData['userID'] || data['username'] == 'admin'" [checked]="data['userIsAdmin']" [(ngModel)]="form.data.userIsAdmin" id="formUserIsAdmin" name="formUserIsAdmin" type="checkbox">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="2">
+                    <div *ngIf="!errorStatus" class="errorMsg"><span>{{errorMsg}}</span></div>
+
+                    <button type="button" *ngIf="!editing" class="table-button" (click)="checkIsAdmin();">Edit</button>
+                    <button type="submit" *ngIf="editing" class="table-button" (click)="editing = !editing;onSubmit()">Confirm Edit</button>
+                    <button type="button" *ngIf="editing" class="table-button" (click)="editing = !editing;resetForm()">Cancel</button>
+                    <button type="button" class="table-button" (click)="back()">Back</button>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+    </form>
+    <div *ngIf="popup" id="removeModal" class="modal" (click)="triggerModal($event)">
+        <div class="modal-content">
+            <span class="close" (click)="popup=false">&times;</span>
+            <p class="titleFont">Owner Verification</p>
+            <p class="contentFont">Please insert your password.</p>
+            <div>
+                <input type="password" id="ownerPwd">
+                <br>
+                <span *ngIf="!checkOwner" class="errorMsg commentFont">Incorrect Password!</span>
+            </div>
+            <button class="table-button" (click)="validateOwner()">Verify</button>
+            <button class="table-button" (click)="popup=false">Cancel</button>
+        </div>
+    </div>
+</div>

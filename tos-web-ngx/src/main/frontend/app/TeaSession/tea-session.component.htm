@@ -1,0 +1,302 @@
+<div class="contentWrapper">
+    <form #formTest="ngForm">
+        <table class="contentFont datatable">
+            <th colspan="4">
+                <p class="titleFont">Tea Session Details</p>
+            </th>
+            <tr>
+                <td></td>
+                <td>Name: </td>
+                <td>{{data['teaName']}}</td>
+                <td>
+                    <div *ngIf="editing">
+                        <input #formTeaName="ngModel" [(ngModel)]="form.data.teaName" id="editFormTeaName" name="formTeaName" type="text" placeholder="Tea Session Name">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Description: </td>
+                <td>{{data['teaDesc']}}</td>
+                <td>
+                    <div *ngIf="editing">
+                        <input #formTeaDesc="ngModel" [(ngModel)]="form.data.teaDesc" id="editFormTeaDesc" name="formTeaDesc" type="text" placeholder="Tea Session Description">
+                    </div>
+                </td>
+            </tr>
+            <tr *ngIf="isOwner">
+                <td></td>
+                <td>Password: </td>
+                <td><input readonly style="border: none;text-align: center;background: transparent" type="password" value="{{data['teaPwd']}}"></td>
+                <td>
+                    <div *ngIf="editing">
+                        <input #formTeaPwd="ngModel" [disabled]="userData['username'] != data['teaCreator']['username']" [(ngModel)]="form.data.teaPwd" id="editFormTeaPwd" name="formTeaPwd" type="password" placeholder="Tea Session Password">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Created By: </td>
+                <td>{{data['teaCreator']['username']}}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Cut-Off Date: </td>
+                <td>{{data['teaCutOffDate']}}</td>
+                <td>
+                    <div *ngIf="editing">
+                        <input [disabled]="overCutDate" #formTeaCutOffDate="ngModel" [(ngModel)]="form.data.teaCutOffDate" id="editFormTeaCutOffDate" name="formTeaCutOffDate" type="date" placeholder="Tea Session Treat Date">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Treat Date: </td>
+                <td>{{data['teaTreatDate']}}</td>
+                <td>
+                    <div *ngIf="editing">
+                        <input [disabled]="overCutDate" #formTeaTreatDate="ngModel" [(ngModel)]="form.data.teaTreatDate" id="editFormTeaTreatDate" name="formTeaTreatDate" type="date" placeholder="Tea Session Treat Date">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Menu: </td>
+                <td>
+                    <img width="250px" id="teaMenu">
+                </td>
+                <td>
+                    <div *ngIf="editing">
+                        <input accept="image/*" type="file" id="editFile" (change)="handleFileInput($event.target.files)">
+                    </div>
+                </td>
+            </tr>
+            <tr *ngIf="isOwner">
+                <td></td>
+                <td>Tea Visibility: </td>
+                <td>{{data['teaVisible']}}</td>
+                <td>
+                    <div *ngIf="editing">
+                        <input #formTeaVisible="ngModel" [(ngModel)]="form.data.teaVisible" id="editFormTeaVisible" name="formTeaVisible" type="checkbox" placeholder="Tea Session Visibility">
+                    </div>
+                </td>
+            </tr>
+            <tr *ngIf="isOwner">
+                <td></td>
+                <td>Private Link: </td>
+                <td>{{data['teaLink']}}</td>
+                <td>
+                    <div *ngIf="editing && userData['userIsAdmin'] && !form.data.teaVisible">
+                        <input #formTeaLink="ngModel" [(ngModel)]="form.data.teaLink" id="editFormTeaLink" name="formTeaLink" type="text" placeholder="Tea Session Link">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="2">
+                    <div *ngIf="!errorStatus" class="errorMsg"><span>{{errorMsg}}</span></div>
+
+                    <button type="button" *ngIf="!editing" class="table-button" (click)="type='edit';checkIsAdmin();">Edit</button>
+                    <button type="button" *ngIf="editing" class="table-button" (click)="onEdit()">Confirm Edit</button>
+                    <button type="button" *ngIf="this.userData['userID']==this.data['teaCreator']['userID']" class="table-button" (click)="type='remove';checkIsAdmin();">Remove</button>
+                    <button type="button" *ngIf="editing" class="table-button" (click)="editing = !editing;resetForm();isOwner = false;">Cancel</button>
+                    <button type="button" class="table-button" (click)="router.navigate(['/tea'], {relativeTo: this.route})">Back</button>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+    </form>
+
+    <div *ngIf="popup" id="verifyModal" class="modal" (click)="triggerModal($event)">
+        <div class="modal-content">
+            <span class="close" (click)="popup=false">&times;</span>
+            <p class="titleFont">Owner Verification</p>
+            <p class="contentFont">Please insert password for this Tea Session.</p>
+            <div>
+                <input type="password" id="ownerPwd">
+                <br>
+                <span *ngIf="!checkOwner" class="errorMsg commentFont">Incorrect Password!</span>
+            </div>
+            <button class="table-button" (click)="validateOwner()">Verify</button>
+            <button class="table-button" (click)="popup=false">Cancel</button>
+        </div>
+    </div>
+
+    <div *ngIf="popupRemoveTea" id="removeTeaModal" class="modal" (click)="triggerModal($event)">
+        <div class="modal-content">
+            <span class="close" (click)="popupRemoveTea=false">&times;</span>
+            <p class="titleFont">Remove Tea Session</p>
+            <p class="contentFont">Are you sure you want to remove this tea session?</p>
+            <button class="table-button" (click)="confirmRemoveTea(teaID)">Remove</button>
+            <button class="table-button" (click)="popupRemoveTea=false">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div class="contentWrapper">
+    <div class="text-center">
+        <p class="titleFont">Orders</p>
+        <table class="contentFont datatable">
+            <th *ngFor = "let column of headers">
+                <p>{{column}}</p>
+            </th>
+            <tr *ngFor = "let row of orderData">
+                <td *ngFor = "let column of displayedColumns">
+                    {{row[column]}}
+                </td>
+                <td>
+                    {{row['orderCreator']['username']}}
+                </td>
+                <td>
+                    <button class="table-button" *ngIf="this.userData['userID'] == row['orderCreator']['userID'] && !overCutDate" (click)="popupRemove=true;orderID=row['orderID'];">Remove</button>
+                    <button class="table-button" *ngIf="this.userData['userID'] == row['orderCreator']['userID'] && !overCutDate" (click)="popupEdit=true;orderID=row['orderID'];fillEditForm()">Edit</button>
+                </td>
+            </tr>
+            <tr *ngIf="!orderExists">
+                <td colspan="4"><p class="commentFont errorMsg">{{errorMsg}}</p></td>
+            </tr>
+        </table>
+        <div class="text-center">
+            <button *ngIf="!overCutDate" class="table-button" (click)="popup2=!popup2">Add New Order</button>
+            <button id="generate" *ngIf="overCutDate" class="table-button" (click)="generateOrder()">Generate Orders</button>
+        </div>
+    </div>
+
+    <div *ngIf="popup2" id="addModal" class="modal" (click)="triggerModal($event)">
+        <div class="modal-content">
+            <span class="close" (click)="popup2=false">&times;</span>
+            <form #formTest="ngForm" (ngSubmit)="onSubmit()">
+                <div class="form">
+                    <p class="titleFont">Create Tea Session</p>
+                    <table class="formTable">
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="formItemName">Item Name: </label>
+                            </td>
+                            <td>
+                                <input #formItemName="ngModel" [(ngModel)]="form2.data.itemName" id="formItemName" name="formItemName" type="text" placeholder="Item Name" required>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="formItemQty">Item Quantity: </label>
+                            </td>
+                            <td>
+                                <input #formItemQty="ngModel" [(ngModel)]="form2.data.itemQty" id="formItemQty" name="formItemQty" type="number" step="1" min="1" placeholder="Item Quantity">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-center" colspan="2">
+                                <div *ngIf="!errorStatus" class="errorMsg"><span>{{errorMsg}}</span></div>
+                                <button id="submitBtn" [disabled]="!formTest.form.valid" name="formSubmit" type="submit" class="table-button">Create</button>
+                                <button class="table-button" (click)="resetForm2()">Reset</button>
+                                <button class="table-button" (click)="popup2=false;resetForm2()">Cancel</button>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div *ngIf="popupRemove" id="removeModal" class="modal" (click)="triggerModal($event)">
+        <div class="modal-content">
+            <span class="close" (click)="popupRemove=false">&times;</span>
+            <p class="titleFont">Remove Order</p>
+            <p class="contentFont">Are you sure you want to remove this order?</p>
+            <button class="table-button" (click)="removeOrder(orderID)">Remove</button>
+            <button class="table-button" (click)="popupRemove=false">Cancel</button>
+        </div>
+    </div>
+
+    <div *ngIf="popupEdit" id="editModal" class="modal" (click)="triggerModal($event)">
+        <div class="modal-content">
+            <span class="close" (click)="popupEdit=false">&times;</span>
+            <form #formTest="ngForm" (ngSubmit)="onSubmit()">
+                <div class="form">
+                    <p class="titleFont">Edit Tea Session</p>
+                    <table class="formTable">
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="editFormItemName">Item Name: </label>
+                            </td>
+                            <td>
+                                <input #editFormItemName="ngModel" [(ngModel)]="form2.data.itemName" id="editFormItemName" name="feditFrmItemName" type="text" placeholder="Item Name" required>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label for="editFormItemQty">Item Quantity: </label>
+                            </td>
+                            <td>
+                                <input #editFormItemQty="ngModel" [(ngModel)]="form2.data.itemQty" id="editFormItemQty" name="feditFrmItemQty" type="number" step="1" min="1" placeholder="Item Quantity">
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-center" colspan="2">
+                                <div *ngIf="!errorStatus" class="errorMsg"><span>{{errorMsg}}</span></div>
+                                <button id="submitBtn2" type="button" class="table-button" (click)="editOrder();">Update</button>
+                                <button class="table-button" (click)="popupEdit=false;resetForm2()">Cancel</button>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div *ngIf="popupSummary" id="summaryModal" class="modal" (click)="triggerModal($event)">
+        <div class="modal-content">
+            <span class="close" (click)="popupSummary=false">&times;</span>
+            <p class="titleFont">Tea Session Order Summary</p>
+            <table class="contentFont datatable">
+                <th></th>
+                <th>Item Name</th>
+                <th>Subtotal</th>
+                <th></th>
+
+                <tr *ngFor = "let row of orderSummary">
+                    <td></td>
+                    <td>
+                        {{row['itemName']}}
+                    </td>
+                    <td>
+                        {{row['subtotal']}}
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Total Participants:
+                    </td>
+                    <td>
+                        {{participant}}
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2">
+                        <button class="table-button" (click)="popupSummary=false">Close</button>
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
