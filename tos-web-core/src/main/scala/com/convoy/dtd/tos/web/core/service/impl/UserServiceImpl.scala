@@ -1,6 +1,6 @@
 package com.convoy.dtd.tos.web.core.impl
 
-import com.convoy.dtd.tos.web.api.entity.User
+import com.convoy.dtd.tos.web.api.entity.Users
 import com.convoy.dtd.tos.web.api.service.UserService
 import com.convoy.dtd.tos.web.core.dao.{OrderDAO, TeaSessionDAO, UserDAO}
 import org.springframework.stereotype.Service
@@ -16,14 +16,14 @@ private[impl] class UserServiceImpl extends UserService
   private var UserDAO:UserDAO = _
 
   @Transactional(readOnly=true)
-  override def findAllUser(): List[User] = UserDAO.findAllAsScala()
+  override def findAllUser(): List[Users] = UserDAO.findAllAsScala()
 
   @Transactional
   override def addUser(username:String, userPwd:String, userEnabled:Boolean, userLastLogin:Date, userIsAdmin:Boolean): Boolean
   = {
     if(!UserDAO.checkDupUsername(username))
     {
-      val t = new User()
+      val t = new Users()
       t.username = username
       t.userPwd = userPwd
       t.userEnabled = userEnabled
@@ -75,10 +75,10 @@ private[impl] class UserServiceImpl extends UserService
   }
 
   @Transactional
-  override def getAllUserById(userID: Long): Option[User] = UserDAO.getById(userID)
+  override def getAllUserById(userID: Long): Option[Users] = UserDAO.getById(userID)
 
   @Transactional
-  override def getAllUserByName(username: String): List[User] = UserDAO.getByName(username)
+  override def getAllUserByName(username: String): List[Users] = UserDAO.getByName(username)
 
   @Transactional
   override def userLogin(username: String, userPwd: String): Int = {

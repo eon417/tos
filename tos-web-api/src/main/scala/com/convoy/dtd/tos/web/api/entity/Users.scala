@@ -6,7 +6,7 @@ import javax.persistence._
 @SerialVersionUID(1L)
 @Entity
 @Table(name="tos_dev.dbo.[Users]")
-class User extends Serializable {
+class Users extends Serializable {
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
   @Column(name="userID", nullable = false)

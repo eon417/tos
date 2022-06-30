@@ -1,6 +1,6 @@
 package com.convoy.dtd.tos.web.api.service
 
-import com.convoy.dtd.tos.web.api.entity.User
+import com.convoy.dtd.tos.web.api.entity.Users
 
 import java.util.Date
 
@@ -8,10 +8,10 @@ trait UserService
 {
   def userLogin(username: String, userPwd: String):Int
 
-  def findAllUser():List[User]
+  def findAllUser():List[Users]
 
-  def getAllUserById(userID:Long):Option[User]
-  def getAllUserByName(username:String):List[User]
+  def getAllUserById(userID:Long):Option[Users]
+  def getAllUserByName(username:String):List[Users]
 
   def addUser(username:String, userPwd:String, userEnabled:Boolean, userLastLogin:Date, userIsAdmin:Boolean):Boolean
 

@@ -18,9 +18,9 @@ class Orders {
   @Column(name="itemQty", nullable = false)
   var itemQty: Long = _
 
-  @ManyToOne(fetch = FetchType.EAGER, targetEntity = classOf[User])
+  @ManyToOne(fetch = FetchType.EAGER, targetEntity = classOf[Users])
   @JoinColumn(name="orderCreator", referencedColumnName = "userID", nullable = false)
-  var orderCreator: User = _
+  var orderCreator: Users = _
 
   @ManyToOne(fetch = FetchType.EAGER, targetEntity = classOf[TeaSession])
   @JoinColumn(name="orderTeaID", referencedColumnName = "teaID", nullable = false)

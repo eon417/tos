@@ -19,9 +19,9 @@ class TeaSession {
   @Column(name="teaDesc")
   var teaDesc: String = _
 
-  @ManyToOne(fetch = FetchType.EAGER, targetEntity = classOf[User])
+  @ManyToOne(fetch = FetchType.EAGER, targetEntity = classOf[Users])
   @JoinColumn(name="teaCreator", referencedColumnName = "userID")
-  var teaCreator: User = _
+  var teaCreator: Users = _
 
   @Column(name="teaPwd", nullable = false)
   var teaPwd: String = _
